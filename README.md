@@ -1,2 +1,2 @@
-# n-a-backend
-Django backend for Nordic Microalgae.
+# nua-backend
+Backend for Nordic Microalgae.
