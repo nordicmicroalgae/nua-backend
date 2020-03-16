@@ -1,0 +1,88 @@
+openapi: 3.0.0
+info:
+  version: 0.0.0
+  title: Nordic Microalgae
+paths:
+  /taxa:
+    get:
+      tags:
+      - taxa
+      description: Returns a list of taxa
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/taxon'
+      parameters:
+      - $ref: '#/components/parameters/skipParam'
+      - $ref: '#/components/parameters/limitParam'
+  /taxa/{aphiaId}:
+    get:
+      tags:
+      - taxa
+      description: Returns a single taxon
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/taxon'
+        404:
+          description: Taxon not found
+      parameters:
+      - $ref: '#/components/parameters/aphiaIdParam'
+components:
+  parameters:
+    aphiaIdParam:
+      name: aphiaId
+      in: path
+      description: Aphia-ID for the taxon
+      required: true
+      schema:
+        type: integer
+        format: int32
+    skipParam:
+      name: skip
+      in: query
+      description: Number of records to skip for pagination
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+    limitParam:
+      name: limit
+      in: query
+      description: Maximum number of records to return
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 50
+        default: 50
+  schemas:
+    taxon:
+      type: object
+      properties:
+        aphiaId:
+          type: integer
+          example: 232161
+        parentId:
+          type: integer
+        scientificName:
+          type: string
+          example: Dinophysis arctica
+        authority:
+          type: string
+          example: Mereschkowsky, 1879
+        rank:
+          type: string
+          example: Species
+        image:
+          type: string
+          example: e2773cc4-b088-4821-81ef-631a8a7c8135
