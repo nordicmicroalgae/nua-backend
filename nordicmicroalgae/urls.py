@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/page/', include('pages.urls')),
     path('api/', include('taxa.urls')),
+    path('api/', include('openapi.urls')),
 ]

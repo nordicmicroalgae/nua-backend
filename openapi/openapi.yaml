@@ -1,0 +1,363 @@
+openapi: 3.0.0
+info:
+  version: 0.0.0
+  title: Nordic Microalgae
+  description: API for Nordic Microalgae. __Under development__.
+servers:
+- url: /api/
+  description: Development & Testing purposes
+tags:
+- name: taxa
+  description: Lists and taxonomical information
+- name: facts
+  description: Collections of facts, traits and various description of taxa
+- name: media
+  description: Information about pictures and operations for contributing media
+paths:
+  /taxa:
+    get:
+      tags:
+      - taxa
+      description: Returns a list of taxa
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Taxon'
+      parameters:
+      - $ref: '#/components/parameters/skipParam'
+      - $ref: '#/components/parameters/limitParam'
+  /taxa/{aphiaId}:
+    get:
+      tags:
+      - taxa
+      description: Returns a single taxon
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Taxon'
+        404:
+          description: Taxon not found
+      parameters:
+      - $ref: '#/components/parameters/aphiaIdParam'
+  /findTaxaByFilter:
+    get:
+      tags:
+      - taxa
+      description: Returns a list of taxa that match specified filter criterias
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Taxon'
+      parameters:
+      - $ref: '#/components/parameters/filterParam'
+      - $ref: '#/components/parameters/skipParam'
+      - $ref: '#/components/parameters/limitParam'
+  /findTaxaByName:
+    get:
+      tags:
+      - taxa
+      description: Returns a list of taxa that match a specified name or pattern
+      responses:
+        200:
+          description: Succesful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Taxon'
+      parameters:
+      - $ref: '#/components/parameters/nameParam'
+      - $ref: '#/components/parameters/skipParam'
+      - $ref: '#/components/parameters/limitParam'
+  /findTaxaByRank:
+    get:
+      tags:
+      - taxa
+      description: Returns a list of taxa within a specified taxonomical rank
+      responses:
+        200:
+          description: Succesful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Taxon'
+      parameters:
+      - $ref: '#/components/parameters/rankParam'
+      - $ref: '#/components/parameters/skipParam'
+      - $ref: '#/components/parameters/limitParam'
+  /facts/{aphiaId}:
+    get:
+      tags:
+      - facts
+      description: Returns facts about a single taxon
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Facts'
+        404:
+          description: Facts not found
+      parameters:
+      - $ref: '#/components/parameters/aphiaIdParam'
+  /media:
+    post:
+      tags:
+      - media
+      description: Upload a media file
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        201:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        422:
+          description: Invalid file upload
+  /media/{mediaId}:
+    get:
+      tags:
+      - media
+      description: Returns a single media item
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        404:
+          description: Media item not found
+      parameters:
+      - $ref: '#/components/parameters/mediaIdParam'
+    patch:
+      tags:
+      - media
+      description: Update attributes for a media item
+      responses:
+        204:
+          description: Successful operation
+        404:
+          description: Media item not found
+      parameters:
+      - $ref: '#/components/parameters/mediaIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+    delete:
+      tags:
+      - media
+      description: Delete a media item
+      responses:
+        204:
+          description: Successful operation
+        404:
+          description: Media item not found
+      parameters:
+      - $ref: '#/components/parameters/mediaIdParam'
+  /findMediaByFilter:
+    get:
+      tags:
+      - media
+      description: Returns a list of media that match specified filter criterias
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Media'
+      parameters:
+      - $ref: '#/components/parameters/filterParam'
+      - $ref: '#/components/parameters/skipParam'
+      - $ref: '#/components/parameters/limitParam'
+components:
+  parameters:
+    aphiaIdParam:
+      name: aphiaId
+      in: path
+      description: Aphia-ID for the taxon
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 232161
+    mediaIdParam:
+      name: mediaId
+      in: path
+      description: ID for the media item
+      required: true
+      schema:
+        type: string
+        example: e2773cc4-b088-4821-81ef-631a8a7c8135
+    skipParam:
+      name: skip
+      in: query
+      description: Number of records to skip for pagination
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+    limitParam:
+      name: limit
+      in: query
+      description: Maximum number of records to return
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 50
+        default: 50
+    filterParam:
+      name: filter
+      in: query
+      description: Set of name:value that need to be considered for filter
+      required: true
+      schema:
+        type: array
+        items:
+          type: string
+    nameParam:
+      name: name
+      in: query
+      description: Scientific name
+      required: true
+      schema:
+        type: string
+        example: Dinophysis arctica
+    rankParam:
+      name: rank
+      in: query
+      description: Taxonomical rank
+      required: true
+      schema:
+        type: string
+        example: Phylum
+        enum:
+        - Domain
+        - Kingdom
+        - Subkingdom
+        - Phylum
+        - Subphylum
+        - Superclass
+        - Infraclass
+        - Superorder
+        - Order
+        - Suborder
+        - Infraorder
+        - Superfamily
+        - Family
+        - Subfamily
+        - Tribe
+        - Genus
+        - Subgenus
+        - Species pair
+        - Species
+        - Subspecies
+        - Variety
+        - Form
+        - Hybrid
+  schemas:
+    Attribute:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+    Facts:
+      type: object
+      properties:
+        provider:
+          type: string
+          example: HELCOM-PEG
+        collection:
+          type: string
+          example: Biovolumes
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attribute'
+    Media:
+      type: object
+      properties:
+        mediaId:
+          type: string
+          example: e2773cc4-b088-4821-81ef-631a8a7c8135
+        fileName:
+          type: string
+          example: Dinophysis arctica.jpg
+        fileType:
+          type: string
+          example: image/jpeg
+        fileSize:
+          type: integer
+          example: 334207
+        checksum:
+          type: string
+          example: 4338b10b1545efd8b3bb6250831aaaf06dafa21f966fccb40edb808c0606582f
+        userName:
+          type: string
+          example: Bengt Karlson
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attribute'
+    Taxon:
+      type: object
+      properties:
+        aphiaId:
+          type: integer
+          example: 232161
+        parentId:
+          type: integer
+          example: 109462
+        scientificName:
+          type: string
+          example: Dinophysis arctica
+        authority:
+          type: string
+          example: Mereschkowsky, 1879
+        rank:
+          type: string
+          example: Species
+        image:
+          type: string
+          example: e2773cc4-b088-4821-81ef-631a8a7c8135
