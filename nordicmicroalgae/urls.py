@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
+    # Admin site routes
     path('admin/', admin.site.urls),
-    path('api/page/', include('pages.urls')),
-    path('api/', include('taxa.urls')),
-    path('api/', include('openapi.urls')),
+    # REST API v1 routes
+    path('v1/', include('pages.urls')),
+    path('v1/', include('taxa.urls')),
+    path('v1/', include('openapi.urls')),
 ]
