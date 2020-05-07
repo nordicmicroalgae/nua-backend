@@ -26,6 +26,15 @@ def get_taxa_by_name(request):
     ))
     return JsonResponse({'taxa': taxa})
 
+# Dummy view for testing purposes
+def get_taxa_by_parent(request):
+    aphia_id = int(request.GET.get('aphiaId', 0))
+    taxa = list(filter(
+        lambda t: aphia_id == t['parentId'],
+        get_test_taxon_list()
+    ))
+    return JsonResponse({'taxa': taxa})
+
 def get_test_taxon_list():
     return [
         {'aphiaId': 8000, 'parentId': 4000, 'scientificName': 'Anabaena aequalis', 'authority': 'Borge', 'rank': 'Species', 'image': 'e2773cc4-b088-4821-81ef-631a8a7c8135'},

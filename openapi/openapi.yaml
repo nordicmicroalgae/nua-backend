@@ -83,6 +83,24 @@ paths:
       - $ref: '#/components/parameters/nameParam'
       - $ref: '#/components/parameters/skipParam'
       - $ref: '#/components/parameters/limitParam'
+  /findTaxaByParent:
+    get:
+      tags:
+      - taxa
+      description: Returns a list of children taxa for specified taxon
+      responses:
+        200:
+          description: Succesful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Taxon'
+      parameters:
+      - $ref: '#/components/parameters/aphiaIdParam'
+      - $ref: '#/components/parameters/skipParam'
+      - $ref: '#/components/parameters/limitParam'
   /findTaxaByRank:
     get:
       tags:
