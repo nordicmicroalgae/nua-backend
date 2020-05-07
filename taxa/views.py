@@ -17,6 +17,14 @@ def get_taxa(request):
 def get_taxa_by_filter(request):
     return JsonResponse({'taxa': get_test_taxon_list()})
 
+# Dummy view for testing purposes
+def get_taxa_by_name(request):
+    name = request.GET.get('name', '').lower()
+    taxa = list(filter(
+        lambda t: name in t['scientificName'].lower(),
+        get_test_taxon_list()
+    ))
+    return JsonResponse({'taxa': taxa})
 
 def get_test_taxon_list():
     return [
