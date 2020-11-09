@@ -20,7 +20,7 @@ urlpatterns = [
     # Admin site routes
     path('admin/', admin.site.urls),
     # REST API v1 routes
-    path('v1/', include('pages.urls')),
-    path('v1/', include('taxa.urls')),
-    path('v1/', include('openapi.urls')),
+    path('api/v1/', include('pages.urls')),
+    path('api/v1/', include('taxa.urls')),
+    path('api/v1/', include('openapi.urls')),
 ]
