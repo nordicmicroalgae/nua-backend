@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.conf import settings
 import pathlib
 
 taxa_worms_cache = None  # Global.
@@ -45,7 +46,7 @@ def get_taxon_list():
     if taxa_worms_cache is not None:
         return taxa_worms_cache
 
-    taxa_worms_path = pathlib.Path("../nua-content/species", "taxa_worms.txt")
+    taxa_worms_path = pathlib.Path(settings.CONTENT_DIR, "species/taxa_worms.txt")
     # Use test data if not available. TODO: Remove later.
     if not taxa_worms_path.exists():
         taxa_worms_cache = get_test_taxon_list()
